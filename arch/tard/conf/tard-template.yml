@@ -1,0 +1,100 @@
+#################################################
+# Process
+#################################################
+
+# Name of this host machine, (default: os provided)
+#host: <name of this machine>
+
+# Name of datacenter
+#datacenter: dc1
+
+# Name of system
+#system: dtag
+
+# Name of process family
+#process: tard
+
+# Name of this instance
+# command line: -n --pname
+pname: tard01
+
+# GOMAXPROCS: 8
+
+#################################################
+# CA 
+#################################################
+
+# CA cert file
+# command line: --ca-cert
+#ca-cert: <path to ca cert file .pem>
+
+# CA private key file
+# command line: --ca-key
+#ca-key: <path to ca private key file .pem>
+
+#################################################
+# Server 
+#################################################
+# server:
+#   # server binding address
+#   # command line: -b --bind
+#   bind: 0.0.0.0:8085
+#   # http prefix, without tailing '/'
+#   # command line: -p --http-prefix
+#   http-prefix: "/tap"
+
+#################################################
+# Metrics
+#################################################
+# metrics:
+#   enabled: false
+#   url: http://d-dtoms.carrotins.com:8086
+#   database: "metrics"
+#   interval: 10 # seconds
+#   #username: ""
+#   #password: ""
+#   align: true
+
+#################################################
+# Receiver
+#################################################
+# receiver:
+#   client-id: "tapd01"
+#   consumer-group: "tapd"
+#   log-name: "receiver"
+#   brokers: 
+#     - "127.0.0.1:9092"
+#   sasl:
+#     enabled: false
+#     mechanism: "SCRAM-SHA-256"
+#     user: "username"
+#     password: "password"
+#   tls:
+#     enabled: false
+#     insecure-skip-verify: true
+#     client-auth: 0
+
+#################################################
+# Log
+#################################################
+
+# Default log level, [trace,debug,info,warn,error,silent] (default: info)
+# command line: -l --log-level
+#log-level: debug
+
+logger:
+  console: true
+  filename: "./tmp/logs/tar01.log"
+  append: false
+  maxsize: 100
+  maxbackups: 1
+  maxage: 3
+  compress: false
+  prefix-width: 30
+  levels:
+    - pattern: "*"
+      level: DEBUG
+    # - pattern: "lsnr-*"
+    #   level: TRACE
+    # - pattern: "ingest-*"
+    #   level: TRACE
