@@ -27,7 +27,7 @@ func New(cfg *Config) (Receiver, error) {
 }
 
 func (r *receiver) Start() error {
-	tlogMessages, err := r.subscriber.Subscribe(context.Background(), r.tlogTopic)
+	messages, err := r.subscriber.Subscribe(context.Background(), r.tlogTopic)
 	if err != nil {
 		r.log.Errorf("kafka '%s' subscriber failed, %s", r.tlogTopic, err)
 		return err
@@ -39,9 +39,9 @@ func (r *receiver) Start() error {
 		tlogTimer := met.GetOrRegisterTimer("dtag.tard.process.tlog", met.DefaultRegistry)
 		for {
 			select {
-			case msg := <-tlogMessages:
+			case msg := <-messages:
 				t1 := time.Now()
-				// r.processEvt(msg)
+				r.processTLog(msg)
 				tlogTimer.Update(time.Since(t1))
 			case <-r.done:
 				return
