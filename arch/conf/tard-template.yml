@@ -1,0 +1,65 @@
+#################################################
+# Process
+#################################################
+
+# Name of this host machine, (default: os provided)
+#host: <name of this machine>
+
+# Name of datacenter
+#datacenter: dc1
+
+# Name of system
+#system: dtag
+
+# Name of process family
+#process: tard
+
+# Name of this instance
+# command line: -n --pname
+pname: tard01
+
+# GOMAXPROCS: 8
+
+#################################################
+# Server 
+#################################################
+server:
+  # server binding address
+  # command line: -b --bind
+  bind: 0.0.0.0:8088
+  # http prefix, without tailing '/'
+  # command line: -p --http-prefix
+  http-prefix: "/tar"
+
+#################################################
+# Blob Storage
+#################################################
+storage:
+  account-name: ""
+  account-key: ""
+  container-name: ""
+
+#################################################
+# Log
+#################################################
+
+# Default log level, [trace,debug,info,warn,error,silent] (default: info)
+# command line: -l --log-level
+#log-level: debug
+
+logger:
+  console: true
+  filename: "./tmp/logs/tard01.log"
+  append: false
+  maxsize: 100
+  maxbackups: 1
+  maxage: 3
+  compress: false
+  prefix-width: 30
+  levels:
+    - pattern: "*"
+      level: DEBUG
+    # - pattern: "lsnr-*"
+    #   level: TRACE
+    # - pattern: "ingest-*"
+    #   level: TRACE
