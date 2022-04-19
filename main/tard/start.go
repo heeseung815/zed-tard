@@ -2,14 +2,25 @@ package main
 
 import (
 	"fmt"
+<<<<<<< HEAD
+=======
+	"net"
+>>>>>>> master
 	"net/http"
 	"os"
 	"os/signal"
+	"runtime"
 	"syscall"
 	"tard/mods"
+	"tard/mods/tlog"
 
+<<<<<<< HEAD
 	"dev.azure.com/carrotins/hdm/hdm-go.git/logging"
 
+=======
+	"dev.azure.com/carrotins/hdm/hdm-go.git/httpsvr"
+	"dev.azure.com/carrotins/hdm/hdm-go.git/logging"
+>>>>>>> master
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -33,8 +44,11 @@ func startArgs(cmd *cobra.Command, args []string) error {
 	verbosePrint("verbose: %t", verbose)
 	verbosePrint("configPath: %s", configPath)
 	verbosePrint("pname: %s", viper.GetString("pname"))
+<<<<<<< HEAD
 	verbosePrint("server.bind: %s", viper.GetString("server.bind"))
 	verbosePrint("server.http-prefix: %s", viper.GetString("server.http-prefix"))
+=======
+>>>>>>> master
 
 	loggingConfig = &logging.Config{
 		Name:               viper.GetString("logger.name"),
@@ -59,6 +73,7 @@ func startArgs(cmd *cobra.Command, args []string) error {
 		lcfg := logging.LevelConfig{Pattern: pattern, Level: level}
 		loggingConfig.Levels = append(loggingConfig.Levels, lcfg)
 	}
+<<<<<<< HEAD
 
 	// if viper.GetBool("metrics.enabled") {
 	// 	metricConfig = &metrics.MetricsReporterConfig{
@@ -70,6 +85,8 @@ func startArgs(cmd *cobra.Command, args []string) error {
 	// 		Interval: viper.GetDuration("metrics.interval"),
 	// 	}
 	// }
+=======
+>>>>>>> master
 
 	return nil
 }
@@ -83,6 +100,40 @@ func startRun(cmd *cobra.Command, args []string) {
 	// Banner
 	log.Info(BootBanner(viper.GetString("pname"), mods.VersionDescription()))
 
+<<<<<<< HEAD
+=======
+	// GOMAXPROCS
+	if viper.IsSet("GOMAXPROCS") {
+		n := viper.GetInt("GOMAXPROCS")
+		runtime.GOMAXPROCS(n)
+	}
+	log.Infof("GOMAXPROCS: %d", runtime.GOMAXPROCS(0))
+
+	// Service for tlogs
+	service := httpsvr.NewServer(&httpsvr.HttpServerConfig{
+		DisableConsoleColor: false,
+		DebugMode:           false,
+		LoggingConfig: &logging.Config{
+			Name:     "http-tard",
+			Console:  false,
+			Filename: ".", // disable http access logging
+		},
+		LoggerName: "tard-http-server",
+	})
+	httpPrefix := viper.GetString("server.http-prefix")
+	serverBind := viper.GetString("server.bind")
+
+	service.GET(httpPrefix+"/version", handleVersion)
+	service.GET(httpPrefix+"/trips/:tripId/logs", tlog.HandleGetTLog())
+	service.POST(httpPrefix+"/trip/log", tlog.HandlePostTLog())
+	lsnr, err := net.Listen("tcp", serverBind)
+	if err != nil {
+		log.Errorf("listener failed, %s", err)
+	}
+
+	service.Start(lsnr)
+
+>>>>>>> master
 	// Wait Signal
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
